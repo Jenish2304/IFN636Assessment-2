@@ -20,8 +20,9 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/jobs', require('./routes/jobRoutes')); 
-
+app.use('/api/jobs', require('./routes/jobRoutes'));
+app.use('/api/tests', require('./routes/testRoutes'));
+app.use('/api/test-results', require('./routes/testResultRoutes'));
 
 
 
