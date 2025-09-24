@@ -1,0 +1,39 @@
+name: Deploy HireHub to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted  # use your EC2 runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create .env on EC2
+        run: |
+          cat > ~/Hirehub/Backend/.env <<EOL
+          PORT=${{ secrets.PORT }}
+          MONGO_URI=${{ secrets.MONGO_URI }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          EOL
+
+      - name: Deploy Backend
+        run: |
+          cd ~/Hirehub/Backend
+          git pull origin main
+          npm ci
+          pm2 restart backend || pm2 start server.js --name backend
+
+      - name: Deploy Frontend
+        run: |
+          cd ~/Hirehub/Frontend
+          git pull origin main
+          npm ci
+          npm run build
+
+      - name: Restart Nginx
+        run: sudo systemctl restart nginx
