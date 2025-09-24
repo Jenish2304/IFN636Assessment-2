@@ -12,10 +12,11 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:3000', // frontend URL
-  credentials: true, // allow cookies
-}));
+// app.use(cors({
+//   origin: 'http://localhost:3000', // frontend URL
+//   credentials: true, // allow cookies
+// }));
+app.use(cors());
 app.use(cookieParser()); 
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
