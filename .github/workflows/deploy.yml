@@ -1,4 +1,4 @@
-name: Deploy HireHub to EC2
+name: Deploy hirehub to EC2
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
 
       - name: Create .env on EC2
         run: |
-          cat > ~/Hirehub/Backend/.env <<EOL
+          cat > ~/IFN636Assessment-2/Backend/.env <<EOL
           PORT=${{ secrets.PORT }}
           MONGO_URI=${{ secrets.MONGO_URI }}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
@@ -23,14 +23,14 @@ jobs:
 
       - name: Deploy Backend
         run: |
-          cd ~/Hirehub/Backend
+          cd ~/IFN636Assessment-2/Backend
           git pull origin main
           npm ci
           pm2 restart backend || pm2 start server.js --name backend
 
       - name: Deploy Frontend
         run: |
-          cd ~/Hirehub/Frontend
+          cd ~/IFN636Assessment-2/Frontend
           git pull origin main
           npm ci
           npm run build
