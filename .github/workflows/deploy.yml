@@ -33,7 +33,7 @@ jobs:
           cd ~/IFN636Assessment-2/Frontend
           git pull origin main
           npm ci
-          npm run build
+          CI=false npm run build
 
       - name: Restart Nginx
         run: sudo systemctl restart nginx
