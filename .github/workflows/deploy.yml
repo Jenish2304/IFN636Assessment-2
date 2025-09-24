@@ -13,6 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # --- Create backend .env ---
       - name: Create .env on EC2
         run: |
           cat > ~/IFN636Assessment-2/Backend/.env <<EOL
@@ -21,6 +22,7 @@ jobs:
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           EOL
 
+      # --- Deploy backend ---
       - name: Deploy Backend
         run: |
           cd ~/IFN636Assessment-2/Backend
@@ -29,12 +31,22 @@ jobs:
           pm2 stop backend || true
           pm2 start server.js --name backend --update-env
 
+      # --- Deploy frontend ---
       - name: Deploy Frontend
         run: |
           cd ~/IFN636Assessment-2/Frontend
           git pull origin main
           npm ci
+
+          # Fix permissions on build folder to avoid EACCES errors
+          sudo chown -R ubuntu:ubuntu build || true
+          sudo chmod -R 755 build || true
+
+          # Clean old build (optional but safer)
+          rm -rf build/*
+
           CI=false npm run build
 
+      # --- Restart nginx ---
       - name: Restart Nginx
         run: sudo systemctl restart nginx
