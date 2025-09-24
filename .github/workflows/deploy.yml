@@ -26,7 +26,8 @@ jobs:
           cd ~/IFN636Assessment-2/Backend
           git pull origin main
           npm ci
-          pm2 restart backend || pm2 start server.js --name backend
+          pm2 stop backend || true
+          pm2 start server.js --name backend --update-env
 
       - name: Deploy Frontend
         run: |
